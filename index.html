@@ -23,9 +23,11 @@
         </div>
         <!-- 搜索区域（搜索框和搜索按钮） -->
         <div class="search-box">
-          <input type="text" class="ipt" placeholder="请输入要搜索的内容" /><button class="btnSearch">
-            搜索
-          </button>
+          <input
+            type="text"
+            class="ipt"
+            placeholder="请输入要搜索的内容"
+          /><button class="btnSearch">搜索</button>
         </div>
         <!-- 搜索建议列表 -->
         <div id="suggest-list"></div>
@@ -40,61 +42,58 @@
       {{/each}}
     </script>
     <script>
-      $(function(){
+      $(function () {
         //定义延迟器的id
-        let timer = null
+        let timer = null;
         //定义防抖的函数
-        function debounce(kw){
+        function debounce(kw) {
           timer = setTimeout(() => {
-            getSuggestList(kw)
+            getSuggestList(kw);
           }, 500);
         }
 
         //定义缓存对象
-        const cacheObj = {}
+        const cacheObj = {};
 
-        $('.ipt').on('keyup',function(){
-          clearTimeout(timer)
-          let keywords = $(this).val().trim()
-          if(keywords.length <=0){
-            return $('#suggest-list').empty().hide()
+        $(".ipt").on("keyup", function () {
+          clearTimeout(timer);
+          let keywords = $(this).val().trim();
+          if (keywords.length <= 0) {
+            return $("#suggest-list").empty().hide();
           }
           //判断缓存中是否有数据
-          if(cacheObj[keywords]){
-            return renderSuggestList(cacheObj[keywords])
+          if (cacheObj[keywords]) {
+            return renderSuggestList(cacheObj[keywords]);
           }
 
           // console.log(keywords);
           // getSuggestList(keywords)
-          debounce(keywords)
-        })
-        function getSuggestList(kw){
+          debounce(keywords);
+        });
+        function getSuggestList(kw) {
           $.ajax({
-            url:'https://suggest.taobao.com/sug?q='+kw,
-            dataType:'jsonp',
-            success:function(res){
+            url: "https://suggest.taobao.com/sug?q=" + kw,
+            dataType: "jsonp",
+            success: function (res) {
               console.log(res);
-              renderSuggestList(res)
-            }
-          })
+              renderSuggestList(res);
+            },
+          });
         }
 
         //渲染UI结构
-        function renderSuggestList(res){
-          if(res.result.length <= 0){
-            return $('#suggest-list').empty().hide()
+        function renderSuggestList(res) {
+          if (res.result.length <= 0) {
+            return $("#suggest-list").empty().hide();
           }
-          const htmlStr = template('tpl-suggestList',res)
-          $('#suggest-list').html(htmlStr).show()
+          const htmlStr = template("tpl-suggestList", res);
+          $("#suggest-list").html(htmlStr).show();
 
           //1.获取到用户输入的内容，当做键
-          let k = $('.ipt').val().trim()
-          cacheObj[k] = res
+          let k = $(".ipt").val().trim();
+          cacheObj[k] = res;
         }
-      })
-
-
-
+      });
     </script>
   </body>
 </html>
