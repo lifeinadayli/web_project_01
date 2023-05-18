@@ -1,0 +1,5 @@
+#忽略jquery.js
+lib/jquery.js
+
+#忽略test目录下所有的文件
+test/
